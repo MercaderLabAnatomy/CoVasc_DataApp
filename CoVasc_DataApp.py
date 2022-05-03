@@ -196,7 +196,7 @@ st.title('Interactive Data App - Covid Box Drug Screening')
 
 st.subheader('Workflow Scheme')
 
-image = Image.open('Data/Images/Design/Online_Short workflow.png')
+image = Image.open('Images/Design/Online_Short workflow.png')
 
 st.image(image) 
 
