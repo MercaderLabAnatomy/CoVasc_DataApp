@@ -15,7 +15,7 @@ from glob import glob
 
 def getAcquiferData():
     # ACQ function to load data
-    source = "E:/Data_Drug_Screening_CovidBox/Master_Table/CovidDrugScreen_Results_MasterTable_FramerateCorrected.xlsx"
+    source = "Data/CovidDrugScreen_Results_MasterTable_FramerateCorrected.xlsx"
     df = pd.read_excel(source)
     df = df.drop(["Unnamed: 0",'Machine', 'Folder', 'Image_title_x','Drug_x','Drug_y', 'image_name', 'Well.1','Unnamed: 21', 'Well.2','Folder_10x', 'Heart_rate','Path_10x','Drug.1',"Hearbeat_x","Corrected_Framerate","Edema"],axis=1)
     df = df.set_index(["Drug","Experiment ID","Concentration µM","Repeat"])
@@ -23,7 +23,7 @@ def getAcquiferData():
     return df
 
 def getDaniovisionData():
-    source = "E:/Data_Drug_Screening_CovidBox/Master_Table/CovidDrugScreen_Results_MasterTable_DanioVision.xlsx"
+    source = "Data/CovidDrugScreen_Results_MasterTable_DanioVision.xlsx"
     df = pd.read_excel(source)
     df = df.reset_index()
     df = df.drop(["Unnamed: 0", "Folder", "File","Combo"],axis=1).reset_index()
@@ -35,19 +35,19 @@ def getDaniovisionData():
     return df
 
 def getSurvivalData():
-    source = "E:/Data_Drug_Screening_CovidBox/Master_Table/CovidDrugScreen_Survival.xlsx"
+    source = "Data/CovidDrugScreen_Survival.xlsx"
     df = pd.read_excel(source)
     df_acquifer = df[df["Type"]=="Acquifer"] 
     df_daniovision = df[df["Type"]=="Daniovision"]
     return (df_acquifer,df_daniovision)
 
 def get_literature_results():
-    df_lit = pd.read_excel("E:/Data_Drug_Screening_CovidBox/Master_Table/CovidDrugScreen_Results_Literature_intersection.xlsx")
+    df_lit = pd.read_excel("Data/CovidDrugScreen_Results_Literature_intersection.xlsx")
     df_lit_counts = df_lit[df_lit.columns[[2,3,5,7,9,12,14,16]]].set_index("Tag")
     return df_lit_counts
 
 def get_scores():
-    df_ = pd.read_excel("E:/Data_Drug_Screening_CovidBox/Master_Table/CovidDrugScreen_Score_Threshold_Kmeansclustered.xlsx").fillna(0).rename(columns={"id":"Drug"})
+    df_ = pd.read_excel("Data/CovidDrugScreen_Score_Threshold_Kmeansclustered.xlsx").fillna(0).rename(columns={"id":"Drug"})
     df_.columns = [i.replace("Â","") for i in df_.columns]
     df_ = df_.sort_values("clusters")
     
@@ -160,7 +160,7 @@ def negpos_scale(df_):
     return df_scale
     
 def get_indications():
-    df_mmv = pd.read_excel("E:/Data_Drug_Screening_CovidBox/CovidBox_Map.xlsx")
+    df_mmv = pd.read_excel("Data/CovidBox_Map.xlsx")
     df_mmv["Drug"] = df_mmv["TRIVIAL_NAME"] + "_" + df_mmv["Plate ID"].astype(str) + df_mmv["Well ID"]
     df_mmv = df_mmv[["TRIVIAL_NAME","Drug","Indication"]]
     df_mmv[["Indication 1","Indication 2"]] = df_mmv["Indication"].str.split(" - ",expand = True)
@@ -169,7 +169,25 @@ def get_indications():
     ind2 = list(df_mmv["Indication 2"].unique())
     return df_mmv, ind1, ind2
 
-
+def authentication():
+    name_c = st.secrets["DB_TOKEN"]
+    username_c = st.secrets["DB_USERNAME"]
+    password_c = st.secrets["DB_PASSWORD"]
+    authentication_status = None
+    
+    with st.form(key="Login"):
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        st.form_submit_button("Login")
+        if (username == username_c) & (password == password_c): 
+            authentication_status = True
+            st.write("Login successful")
+        elif (username == "") | (password == ""):
+            st.write("Enter a username and password")
+        else:
+            authentication_status = False
+            st.write("Username/Password wrong")
+    return (authentication_status, username)
     
 st.set_page_config(  layout="wide")
 
@@ -178,7 +196,7 @@ st.title('Interactive Data App - Covid Box Drug Screening')
 
 st.subheader('Workflow Scheme')
 
-image = Image.open('E:/Data_Drug_Screening_CovidBox/Paper_Draft/Figures/Figure9_Data App/Online_Short workflow.png')
+image = Image.open('Data/Images/Design/Online_Short workflow.png')
 
 st.image(image) 
 
@@ -190,174 +208,179 @@ druglist = df1.index.levels[0].tolist()
 druglist1 = ["Remdesivir_1A06","Hydroxychloroquine_1F11","Lopinavir_1H04","Ritonavir_1A11","Favipiravir_1D10","Ivermectin_1F05","Ribavirin_1F08"
 ,"Umifenovir_2E02","Baricitinib_2C09","Mycophenolic acid_2B10"]
 
-#Sidebar
-st.sidebar.title('Choose your compounds of interest')
+with st.sidebar:
+    a_state,user = authentication()
 
-x = st.sidebar.multiselect('Choose Compounds', druglist, druglist1)
-ind_primary = st.sidebar.multiselect('Optional: Choose by primary drug indication', i1, [])
-ind_secondary = st.sidebar.multiselect('Optional: Choose by secondary drug indication', i2, [])
+if a_state:
 
-if ind_primary:
-    x.clear()
-    x = list(df_indications.set_index('Indication 1').loc[ind_primary]["Drug"].values)
+    #Sidebar
+    st.sidebar.title('Choose your compounds of interest')
 
-conc05 = st.sidebar.checkbox('Show also Concentration 0.5 µM')
+    x = st.sidebar.multiselect('Choose Compounds', druglist, druglist1)
+    ind_primary = st.sidebar.multiselect('Optional: Choose by primary drug indication', i1, [])
+    ind_secondary = st.sidebar.multiselect('Optional: Choose by secondary drug indication', i2, [])
 
-if conc05:
-     st.write('Showing 0.5 µM and 1 µM treatment concentration. Only a subset of compounds were tested at 0.5 µM.')
+    if ind_primary:
+        x.clear()
+        x = list(df_indications.set_index('Indication 1').loc[ind_primary]["Drug"].values)
 
-x_insert = x.copy()
-xlength = len(x)
-experiment_ids = np.sort(df1.loc[x].reset_index()["Experiment ID"].unique())
-x_insert.insert(0,'Control')
+    conc05 = st.sidebar.checkbox('Show also Concentration 0.5 µM')
 
-with st.expander("See heatmap"):
-    df_test = get_scores()
-    fig_test = plot_heatmap(df_test, druglist = x, show_all = False, scale = True)
-    st.plotly_chart(fig_test,use_container_width=True)
-    
+    if conc05:
+         st.write('Showing 0.5 µM and 1 µM treatment concentration. Only a subset of compounds were tested at 0.5 µM.')
 
-with st.expander("See literature counts"):
-    
-    df_lit_search = get_literature_results()
-    df_out = get_subset_results(df_lit_search, x)
-    fig_pie = plot_pies(df_out)
-    st.plotly_chart(fig_pie,use_container_width=True)
-    
-with st.expander("See survival"):
-    df_survival_ACQ,df_survival_DV = getSurvivalData()   
-    cols_survival_ACQ = st.container() 
-    
-    with cols_survival_ACQ:
-        data_ACQ,x_ACQ,y_ACQ = survival_plot(df_survival_ACQ, x)
-        fig_survival_ACQ = px.imshow(data_ACQ,
-                    labels=dict(x="Drug", y=("4 dpf with PTU"), color="Survival"),
-                    x=x_ACQ,
-                    y=y_ACQ,
-                    color_continuous_scale='Spectral',
-                    zmin=0,
-                    zmax=100
-                    )
-        fig_survival_ACQ.update_xaxes(tickangle=45)
-        st.plotly_chart(fig_survival_ACQ,use_container_width=True)
+    x_insert = x.copy()
+    xlength = len(x)
+    experiment_ids = np.sort(df1.loc[x].reset_index()["Experiment ID"].unique())
+    x_insert.insert(0,'Control')
 
-    cols_survival_DV = st.container() 
-    with cols_survival_DV:
-        data_DV,x_DV,y_DV = survival_plot(df_survival_DV, x)
-        fig_survival_DV = px.imshow(data_DV,
-                    labels=dict(x="Drug", y=("5 dpf no PTU"), color="Survival"),
-                    x=x_DV,
-                    y=y_DV,
-                    color_continuous_scale='Spectral',
-                    zmin=0,
-                    zmax=100
-                    )
-        fig_survival_DV.update_xaxes(tickangle=45)
-        st.plotly_chart(fig_survival_DV,use_container_width=True)
-
-with st.expander("See morphological analysis"):
-    standardize = st.checkbox('Standardize morphological data to global control median')
-    groupbydrug = st.checkbox('Group morphological graphs by drug')
-    
-    if standardize:
-        collist1 = ['Drug','Experiment ID','Concentration µM','Length','N_ISV','Median_minor_axis_length','Median_major_axis_length','Delta_DIA-SYS','Heart_BPM']
-        df1 = standardize_globalMedian(df1 ,collist1, "Control", "Concentration µM")
-    
-    df_selected = df1.loc[x_insert].reset_index()
-    plotdata = df_selected.set_index("Experiment ID").loc[experiment_ids].reset_index()
-    plotdata["Experiment ID"] = plotdata["Experiment ID"].astype(str)
-    
-    if not conc05:
-        plotdata= plotdata[plotdata["Concentration µM"]==1.0]
-       
-    
+    with st.expander("See heatmap"):
+        df_test = get_scores()
+        fig_test = plot_heatmap(df_test, druglist = x, show_all = False, scale = True)
+        st.plotly_chart(fig_test,use_container_width=True)
         
-    # ACQ Choose the measurement to plot
-    measurement = st.selectbox('Toggle between ', ('Length', 'Heart_BPM','Median_minor_axis_length','Median_major_axis_length','N_ISV','Delta_DIA-SYS'))
-    
-    # ACQ Plot the selected measurement 
-    if groupbydrug:
-        fig = px.violin(plotdata, y=measurement, x="Drug", color="Drug",facet_col="Concentration µM",category_orders={"Drug":x_insert}, box=True, points="all", hover_data=plotdata.columns)
-        st.plotly_chart(fig,use_container_width=True)
-        
-    else: 
-        fig = px.violin(plotdata, y=measurement, x="Experiment ID", color="Drug",facet_col="Concentration µM",category_orders={"Drug":x_insert}, box=True, points="all", hover_data=plotdata.columns)
-        st.plotly_chart(fig,use_container_width=True)
 
-with st.expander("See activity analysis"):
-    df2 = getDaniovisionData()
-    measurement2 = st.selectbox('Toggle between ', df2.columns)
-    standardize2 = st.checkbox('Standardize activity data to global control median')
-    groupbydrug2 = st.checkbox('Group activity graphs by drug')
-    
-    if standardize2:
-        collist2 = list(df2.reset_index().columns)
-        df2 = standardize_globalMedian(df2 ,collist2, "Control", ["Concentration µM","Replicate"])
-    
-    experiment_ids2=np.sort(df2.loc[x].reset_index()["Experiment ID"].unique())
-    df_selected2=df2.loc[x_insert].reset_index()
-    
-    
-    plotdata2=df_selected2.set_index("Experiment ID").loc[experiment_ids2].reset_index()
-    plotdata2["Experiment ID"] = plotdata2["Experiment ID"].astype(str)
-
-    if not conc05:
-        plotdata2= plotdata2[plotdata2["Concentration µM"]==1.0]
-    
-    if groupbydrug2:
-        fig2 = px.violin(plotdata2, y=measurement2, x="Drug", color="Drug",facet_col="Concentration µM",category_orders={"Drug":x_insert}, box=True, points="all",hover_data=plotdata2.columns)
-        st.plotly_chart(fig2,use_container_width=True)
-
-    else:
-        fig2 = px.violin(plotdata2, y=measurement2, x="Experiment ID", color="Drug",facet_col="Concentration µM",category_orders={"Drug":x_insert}, box=True, points="all",hover_data=plotdata2.columns)
-        st.plotly_chart(fig2,use_container_width=True)
-
-with st.expander("See images of larvae"):
-    # ACQ Show images from the acquifer for each compound
-    ids=plotdata["Experiment ID"].unique()
-    plotimages=plotdata.set_index("Experiment ID").loc[ids[0]]["Drug"].unique()
-    listexperiments={expid: plotdata.set_index("Experiment ID").loc[expid]["Drug"].unique() for expid in ids }
-    cols = st.columns(len(listexperiments))
-
-    for id,(col,experiment) in enumerate(zip(cols,listexperiments)):
-        st.header('Experiment ID: '+ experiment)
+    with st.expander("See literature counts"):
         
-        compoundsexperiment = list( listexperiments[experiment] )
-        compoundsexperiment.remove("Control")
+        df_lit_search = get_literature_results()
+        df_out = get_subset_results(df_lit_search, x)
+        fig_pie = plot_pies(df_out)
+        st.plotly_chart(fig_pie,use_container_width=True)
         
-        expcols = st.columns(len(compoundsexperiment))
+    with st.expander("See survival"):
+        df_survival_ACQ,df_survival_DV = getSurvivalData()   
+        cols_survival_ACQ = st.container() 
         
-        Control_BF=glob("E:/Data_Drug_Screening_CovidBox/Example images/2x_examples/Experiment_ID_"+experiment+"/Control_C1_*.jpg")[0]
-        Control_GFP=glob("E:/Data_Drug_Screening_CovidBox/Example images/2x_examples/Experiment_ID_"+experiment+"/Control_C2_*.jpg")[0]
+        with cols_survival_ACQ:
+            data_ACQ,x_ACQ,y_ACQ = survival_plot(df_survival_ACQ, x)
+            fig_survival_ACQ = px.imshow(data_ACQ,
+                        labels=dict(x="Drug", y=("4 dpf with PTU"), color="Survival"),
+                        x=x_ACQ,
+                        y=y_ACQ,
+                        color_continuous_scale='Spectral',
+                        zmin=0,
+                        zmax=100
+                        )
+            fig_survival_ACQ.update_xaxes(tickangle=45)
+            st.plotly_chart(fig_survival_ACQ,use_container_width=True)
+
+        cols_survival_DV = st.container() 
+        with cols_survival_DV:
+            data_DV,x_DV,y_DV = survival_plot(df_survival_DV, x)
+            fig_survival_DV = px.imshow(data_DV,
+                        labels=dict(x="Drug", y=("5 dpf no PTU"), color="Survival"),
+                        x=x_DV,
+                        y=y_DV,
+                        color_continuous_scale='Spectral',
+                        zmin=0,
+                        zmax=100
+                        )
+            fig_survival_DV.update_xaxes(tickangle=45)
+            st.plotly_chart(fig_survival_DV,use_container_width=True)
+
+    with st.expander("See morphological analysis"):
+        standardize = st.checkbox('Standardize morphological data to global control median')
+        groupbydrug = st.checkbox('Group morphological graphs by drug')
         
-        for drugcol,drug in zip(expcols,compoundsexperiment): 
+        if standardize:
+            collist1 = ['Drug','Experiment ID','Concentration µM','Length','N_ISV','Median_minor_axis_length','Median_major_axis_length','Delta_DIA-SYS','Heart_BPM']
+            df1 = standardize_globalMedian(df1 ,collist1, "Control", "Concentration µM")
+        
+        df_selected = df1.loc[x_insert].reset_index()
+        plotdata = df_selected.set_index("Experiment ID").loc[experiment_ids].reset_index()
+        plotdata["Experiment ID"] = plotdata["Experiment ID"].astype(str)
+        
+        if not conc05:
+            plotdata= plotdata[plotdata["Concentration µM"]==1.0]
+           
+        
             
-            st.header('Control vs. ' + drug)
+        # ACQ Choose the measurement to plot
+        measurement = st.selectbox('Toggle between ', ('Length', 'Heart_BPM','Median_minor_axis_length','Median_major_axis_length','N_ISV','Delta_DIA-SYS'))
+        
+        # ACQ Plot the selected measurement 
+        if groupbydrug:
+            fig = px.violin(plotdata, y=measurement, x="Drug", color="Drug",facet_col="Concentration µM",category_orders={"Drug":x_insert}, box=True, points="all", hover_data=plotdata.columns)
+            st.plotly_chart(fig,use_container_width=True)
             
-            drug_BF=glob("E:/Data_Drug_Screening_CovidBox/Example images/2x_examples/Experiment_ID_"+experiment+"/" + drug + "_C1_*.jpg")[0]
-            drug_GFP=glob("E:/Data_Drug_Screening_CovidBox/Example images/2x_examples/Experiment_ID_"+experiment+"/" + drug + "_C2_*.jpg")[0]
+        else: 
+            fig = px.violin(plotdata, y=measurement, x="Experiment ID", color="Drug",facet_col="Concentration µM",category_orders={"Drug":x_insert}, box=True, points="all", hover_data=plotdata.columns)
+            st.plotly_chart(fig,use_container_width=True)
+
+    with st.expander("See activity analysis"):
+        df2 = getDaniovisionData()
+        measurement2 = st.selectbox('Toggle between ', df2.columns)
+        standardize2 = st.checkbox('Standardize activity data to global control median')
+        groupbydrug2 = st.checkbox('Group activity graphs by drug')
+        
+        if standardize2:
+            collist2 = list(df2.reset_index().columns)
+            df2 = standardize_globalMedian(df2 ,collist2, "Control", ["Concentration µM","Replicate"])
+        
+        experiment_ids2=np.sort(df2.loc[x].reset_index()["Experiment ID"].unique())
+        df_selected2=df2.loc[x_insert].reset_index()
+        
+        
+        plotdata2=df_selected2.set_index("Experiment ID").loc[experiment_ids2].reset_index()
+        plotdata2["Experiment ID"] = plotdata2["Experiment ID"].astype(str)
+
+        if not conc05:
+            plotdata2= plotdata2[plotdata2["Concentration µM"]==1.0]
+        
+        if groupbydrug2:
+            fig2 = px.violin(plotdata2, y=measurement2, x="Drug", color="Drug",facet_col="Concentration µM",category_orders={"Drug":x_insert}, box=True, points="all",hover_data=plotdata2.columns)
+            st.plotly_chart(fig2,use_container_width=True)
+
+        else:
+            fig2 = px.violin(plotdata2, y=measurement2, x="Experiment ID", color="Drug",facet_col="Concentration µM",category_orders={"Drug":x_insert}, box=True, points="all",hover_data=plotdata2.columns)
+            st.plotly_chart(fig2,use_container_width=True)
+
+    with st.expander("See images of larvae"):
+        # ACQ Show images from the acquifer for each compound
+        ids=plotdata["Experiment ID"].unique()
+        plotimages=plotdata.set_index("Experiment ID").loc[ids[0]]["Drug"].unique()
+        listexperiments={expid: plotdata.set_index("Experiment ID").loc[expid]["Drug"].unique() for expid in ids }
+        cols = st.columns(len(listexperiments))
+
+        for id,(col,experiment) in enumerate(zip(cols,listexperiments)):
+            st.header('Experiment ID: '+ experiment)
             
+            compoundsexperiment = list( listexperiments[experiment] )
+            compoundsexperiment.remove("Control")
             
-            cols1,cols2,cols3,cols4 = st.columns(4)
+            expcols = st.columns(len(compoundsexperiment))
             
-            with cols1:
-                im1=Image.open(Control_BF)
-                st.image(im1, caption='2x-BF', width=None, use_column_width=None, clamp=True, channels="RGB", output_format="auto")
+            Control_BF=glob("Images/Example images/2x_examples/Experiment_ID_"+experiment+"/Control_C1_*.jpg")[0]
+            Control_GFP=glob("Images/Example images/2x_examples/Experiment_ID_"+experiment+"/Control_C2_*.jpg")[0]
+            
+            for drugcol,drug in zip(expcols,compoundsexperiment): 
                 
-            with cols2:
-                im2=Image.open(Control_GFP)
-                st.image(im2, caption='2x-Fli:GFP', width=None, use_column_width=None, clamp=True, channels="RGB", output_format="auto")
+                st.header('Control vs. ' + drug)
                 
-            with cols3:
-                im3=Image.open(drug_BF)
-                st.image(im3, caption='2x-BF', width=None, use_column_width=None, clamp=True, channels="RGB", output_format="auto")
+                drug_BF=glob("Images/Example images/2x_examples/Experiment_ID_"+experiment+"/" + drug + "_C1_*.jpg")[0]
+                drug_GFP=glob("Images/Example images/2x_examples/Experiment_ID_"+experiment+"/" + drug + "_C2_*.jpg")[0]
                 
-            with cols4:
-                im4=Image.open(drug_GFP)
-                st.image(im4, caption='2x-Fli:GFP', width=None, use_column_width=None, clamp=True, channels="RGB", output_format="auto")
                 
-        
-        #im=(im/np.max(im))*255
-        #im = Image.fromarray(im[0])
-        
-        #st.image("https://static.streamlit.io/examples/cat.jpg")
+                cols1,cols2,cols3,cols4 = st.columns(4)
+                
+                with cols1:
+                    im1=Image.open(Control_BF)
+                    st.image(im1, caption='2x-BF', width=None, use_column_width=None, clamp=True, channels="RGB", output_format="auto")
+                    
+                with cols2:
+                    im2=Image.open(Control_GFP)
+                    st.image(im2, caption='2x-Fli:GFP', width=None, use_column_width=None, clamp=True, channels="RGB", output_format="auto")
+                    
+                with cols3:
+                    im3=Image.open(drug_BF)
+                    st.image(im3, caption='2x-BF', width=None, use_column_width=None, clamp=True, channels="RGB", output_format="auto")
+                    
+                with cols4:
+                    im4=Image.open(drug_GFP)
+                    st.image(im4, caption='2x-Fli:GFP', width=None, use_column_width=None, clamp=True, channels="RGB", output_format="auto")
+                    
+            
+            #im=(im/np.max(im))*255
+            #im = Image.fromarray(im[0])
+            
+            #st.image("https://static.streamlit.io/examples/cat.jpg")
