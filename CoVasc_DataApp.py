@@ -204,6 +204,9 @@ st.image(image)
 df_indications, i1, i2 = get_indications()
 
 df1 = getAcquiferData()
+
+
+df1 = df1.rename(columns = {'Length':'Larval length (µM)','Heart_BPM':'Heart rate (BPM)','Median_minor_axis_length':'ISV width (µM)','Median_major_axis_length':'ISV length (µM)','N_ISV':'Number ISV (Count)','Delta_DIA-SYS':'Ejection fraction (%)'}) 
 druglist = df1.index.levels[0].tolist()
 druglist1 = ["Remdesivir_1A06","Hydroxychloroquine_1F11","Lopinavir_1H04","Ritonavir_1A11","Favipiravir_1D10","Ivermectin_1F05","Ribavirin_1F08"
 ,"Umifenovir_2E02","Baricitinib_2C09","Mycophenolic acid_2B10"]
@@ -283,7 +286,7 @@ if a_state:
         groupbydrug = st.checkbox('Group morphological graphs by drug')
         
         if standardize:
-            collist1 = ['Drug','Experiment ID','Concentration µM','Length','N_ISV','Median_minor_axis_length','Median_major_axis_length','Delta_DIA-SYS','Heart_BPM']
+            collist1 = ['Drug','Experiment ID','Concentration µM','Larval length (µM)', 'Heart rate (BPM)','ISV width (µM)','ISV length (µM)','Number ISV (Count)','Ejection fraction (%)']
             df1 = standardize_globalMedian(df1 ,collist1, "Control", "Concentration µM")
         
         df_selected = df1.loc[x_insert].reset_index()
@@ -296,7 +299,7 @@ if a_state:
         
             
         # ACQ Choose the measurement to plot
-        measurement = st.selectbox('Toggle between ', ('Length', 'Heart_BPM','Median_minor_axis_length','Median_major_axis_length','N_ISV','Delta_DIA-SYS'))
+        measurement = st.selectbox('Toggle between ', ('Larval length (µM)', 'Heart rate (BPM)','ISV width (µM)','ISV length (µM)','Number ISV (Count)','Ejection fraction (%)'))
         
         # ACQ Plot the selected measurement 
         if groupbydrug:
