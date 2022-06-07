@@ -47,9 +47,9 @@ def get_literature_results():
     return df_lit_counts
 
 def get_scores():
-    df_ = pd.read_excel("Data/CovidDrugScreen_Score_Threshold_Kmeansclustered.xlsx").fillna(0).rename(columns={"id":"Drug"})
-    df_.columns = [i.replace("Â","") for i in df_.columns]
-    df_ = df_.sort_values("clusters")
+    df_ = pd.read_excel("Data/CovidDrugScreen_Score_Threshold_Scaled.xlsx").fillna(0).rename(columns={"":"Drug"})
+    #df_.columns = [i.replace("Â","") for i in df_.columns]
+    #df_ = df_.sort_values("clusters")
     
     return df_
 
