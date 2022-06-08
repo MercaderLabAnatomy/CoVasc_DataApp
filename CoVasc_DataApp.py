@@ -127,7 +127,7 @@ def plot_heatmap(df_, druglist = None, show_all = True, scale = True):
         df_ = df_.loc[druglist].reset_index()
         
     if scale:
-        df_[df_.columns[1:]] = negpos_scale(df_[df_.columns[1:]])
+        
         fig = go.Figure(data=go.Heatmap(
                         z= df_[df_.columns[1:]].T,
                         y= df_.columns[1:],
@@ -147,7 +147,7 @@ def plot_heatmap(df_, druglist = None, show_all = True, scale = True):
     #for cl in list(df_["clusters"].unique()):
     #    fig.add_vline(np.max(np.where(df_["clusters"] == cl))+0.5)
     fig.update_xaxes( tickangle = -90)
-    fig.update_layout(width=1000,height=500)
+    fig.update_layout(width=1000,height=400)
     
     return fig
     
