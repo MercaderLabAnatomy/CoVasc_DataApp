@@ -145,8 +145,8 @@ def plot_heatmap(df_, druglist = None, show_all = True, scale = True):
                     colorscale = 'PiYG'
         ))
     
-    for cl in list(df_["clusters"].unique()):
-        fig.add_vline(np.max(np.where(df_["clusters"] == cl))+0.5)
+    #for cl in list(df_["clusters"].unique()):
+    #    fig.add_vline(np.max(np.where(df_["clusters"] == cl))+0.5)
     fig.update_xaxes( tickangle = -90)
     fig.update_layout(width=1000,height=300)
     
