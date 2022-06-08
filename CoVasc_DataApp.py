@@ -138,8 +138,8 @@ def plot_heatmap(df_, druglist = None, show_all = True, scale = True):
         ))
     else:
         fig = go.Figure(data=go.Heatmap(
-                    z= df_[df_.columns[2:]].T,
-                    y= df_.columns[2:],
+                    z= df_[df_.columns[1:]].T,
+                    y= df_.columns[1:],
                     x= df_.Drug,
                     colorscale = 'PiYG'
         ))
