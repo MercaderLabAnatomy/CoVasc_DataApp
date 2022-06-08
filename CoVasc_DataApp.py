@@ -132,9 +132,6 @@ def plot_heatmap(df_, druglist = None, show_all = True, scale = True):
                         z= df_[df_.columns[2:]].T,
                         y= df_.columns[2:],
                         x= df_.Drug,
-                        zmin = -1,
-                        zmax = 1,
-                        zmid = 0,
                         colorscale = 'PiYG'
         ))
     else:
