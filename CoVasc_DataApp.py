@@ -127,10 +127,10 @@ def plot_heatmap(df_, druglist = None, show_all = True, scale = True):
         df_ = df_.loc[druglist].reset_index()
         
     if scale:
-        df_[df_.columns] = negpos_scale(df_[df_.columns])
+        df_[df_.columns[1:]] = negpos_scale(df_[df_.columns[1:]])
         fig = go.Figure(data=go.Heatmap(
-                        z= df_[df_.columns].T,
-                        y= df_.columns,
+                        z= df_[df_.columns[1:]].T,
+                        y= df_.columns[1:],
                         x= df_.Drug,
                         
                         zmid = 0,
@@ -138,8 +138,8 @@ def plot_heatmap(df_, druglist = None, show_all = True, scale = True):
         ))
     else:
         fig = go.Figure(data=go.Heatmap(
-                    z= df_[df_.columns].T,
-                    y= df_.columns,
+                    z= df_[df_.columns[1:]].T,
+                    y= df_.columns[1:],
                     x= df_.Drug,
                     colorscale = 'PiYG'
         ))
