@@ -124,7 +124,7 @@ def plot_pies(df_):
 
 def plot_heatmap(df_, druglist = None, show_all = True, scale = True):
     if druglist and ~show_all:
-        df_ = df_.set_index("Drug").loc[druglist].reset_index()
+        df_ = df_.loc[druglist].reset_index()
         
     if scale:
         df_[df_.columns[2:]] = negpos_scale(df_[df_.columns[2:]])
