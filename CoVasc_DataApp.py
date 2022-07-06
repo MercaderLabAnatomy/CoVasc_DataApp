@@ -79,6 +79,7 @@ def standardize_globalMedian(df_,collist, reference, index_columns):
     
     df_standardized = df_selcols.reset_index().set_index(index_) - norm_delta
     df_standardized = df_standardized.drop(index_columns,axis=1).reset_index().set_index("Drug") 
+    df_standardized_x[df_standardized_x < 0] = 0 
     return df_standardized    
 
 def get_subset_results(df_,druglist):
