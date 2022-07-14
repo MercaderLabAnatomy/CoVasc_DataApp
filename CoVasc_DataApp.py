@@ -346,12 +346,12 @@ if a_state:
         df3 = getActivityData().set_index("Drug")
         experiment_ids3 = np.sort(df3.loc[x].reset_index()["Experiment ID"].unique())
         listexperiments1 = {expid1: df3.reset_index().set_index("Experiment ID").loc[expid1]["Drug"].unique() for expid1 in experiment_ids3 }
-        st.write(len(listexperiments1))
+        #st.write(len(listexperiments1))
         
-        #cols1 = st.columns(len(listexperiments))
+        cols1 = st.columns(len(listexperiments))
         
-        #for id,(col,experiment) in enumerate(zip(cols1,experiment_ids3)):
-        #    st.header('Experiment ID: '+ experiment)
+        for id,(col,experiment) in enumerate(zip(cols1,listexperiments1)):
+            st.header('Experiment ID: '+ experiment)
         #    plot_df3 = df3.reset_index().set_index("Experiment ID").loc[experiment]
         #    fig3 = px.line(df3.loc[x_insert].reset_index(), x="Bin [1 sec]", y="Velocity [mm/s]", color='Drug')
         #   st.plotly_chart(fig3,use_container_width=True)
