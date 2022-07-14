@@ -35,7 +35,7 @@ def getDaniovisionData():
 
 def getActivityData():
     source = "Data/CovidDrugScreen_Results_MeanActivity_Daniovision.csv"
-    df = pd.read_csv(source).set_index(["Experiment ID","Drug"])
+    df = pd.read_csv(source)
     return df
     
 def getSurvivalData():
@@ -343,9 +343,10 @@ if a_state:
             st.plotly_chart(fig2,use_container_width=True)
     
     with st.expander("See swimming plot"):
-        df3 = getActivityData()
+        df3 = getActivityData().set_index("Drug")
         experiment_ids3=np.sort(df3.loc[x].reset_index()["Experiment ID"].unique())
-        fig3 = px.line(df_collect.loc[experiment_ids3].reset_index(), x="Bin [1 sec]", y="Velocity [mm/s]", color='Drug')
+        
+        fig3 = px.line(df3.loc[x_insert].reset_index(), x="Bin [1 sec]", y="Velocity [mm/s]", color='Drug')
         st.plotly_chart(fig3,use_container_width=True)
     
     with st.expander("See images of larvae"):
