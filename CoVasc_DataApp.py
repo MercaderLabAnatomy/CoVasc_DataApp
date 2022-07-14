@@ -24,16 +24,20 @@ def getAcquiferData():
 
 def getDaniovisionData():
     source = "Data/CovidDrugScreen_Results_MasterTable_DanioVision.xlsx"
-    df = pd.read_excel(source)
-    df = df.reset_index()
+    df = pd.read_excel(source).reset_index()
     df = df.drop(["Unnamed: 0", "Folder", "File","Combo"],axis=1).reset_index()
     df = df.rename(columns= {"Concentration": "Concentration µM"})
-    df=df.pivot(index=["Drug","Well","Experiment ID","Concentration µM","Replicate"], columns="Phase", values=['Distance_moved [mm]', 'Velocity [mm/s]', 'Moving [s]',
+    df = df.pivot(index=["Drug","Well","Experiment ID","Concentration µM","Replicate"], columns="Phase", values=['Distance_moved [mm]', 'Velocity [mm/s]', 'Moving [s]',
        'Not_Moving [s]'])
     #df= df.reset_index()
     df.columns=df.columns.map(('|'.join)).str.strip('|')
     return df
 
+def getActivityData():
+    source = "Data/CovidDrugScreen_Results_MeanActivity_Daniovision.csv"
+    df = pd.read_csv(source).set_index(["Experiment ID","Drug"])
+    return df
+    
 def getSurvivalData():
     source = "Data/CovidDrugScreen_Survival.xlsx"
     df = pd.read_excel(source)
@@ -337,7 +341,13 @@ if a_state:
         else:
             fig2 = px.violin(plotdata2, y=measurement2, x="Experiment ID", color="Drug",facet_col="Concentration µM",category_orders={"Drug":x_insert}, box=True, points="all",hover_data=plotdata2.columns)
             st.plotly_chart(fig2,use_container_width=True)
-
+    
+    with st.expander("See swimming plot"):
+        df3 = getActivityData()
+        experiment_ids3=np.sort(df3.loc[x].reset_index()["Experiment ID"].unique())
+        fig3 = px.line(df_collect.loc[experiment_ids3].reset_index(), x="Bin [1 sec]", y="Velocity [mm/s]", color='Drug')
+        st.plotly_chart(fig3,use_container_width=True)
+    
     with st.expander("See images of larvae"):
         # ACQ Show images from the acquifer for each compound
         ids=plotdata["Experiment ID"].unique()
