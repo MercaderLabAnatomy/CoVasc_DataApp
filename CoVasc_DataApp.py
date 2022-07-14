@@ -346,9 +346,9 @@ if a_state:
         df3 = getActivityData().set_index("Drug")
         experiment_ids3 = df3.loc[x].reset_index()["Experiment ID"].astype(str).unique()
         
-        listexperiments = {expid: df3.reset_index().set_index("Experiment ID").loc[expid]["Drug"].unique() for expid in experiment_ids3 }
+        listexperiments1 = {expid1: df3.reset_index().set_index("Experiment ID").loc[expid1]["Drug"].unique() for expid1 in experiment_ids3 }
         
-        st.write(listexperiments)
+        st.write(listexperiments1)
         
         #cols1 = st.columns(len(listexperiments))
         
