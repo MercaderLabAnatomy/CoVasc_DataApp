@@ -344,10 +344,8 @@ if a_state:
     
     with st.expander("See swimming plot"):
         df3 = getActivityData().set_index("Drug")
-        experiment_ids3 = df3.loc[x].reset_index()["Experiment ID"].astype(str).unique()
-        
-        listexperiments1 = {expid1: df3.reset_index().set_index("Experiment ID").loc[expid1]["Drug"].unique() for expid1 in experiment_ids3 }
-        
+        experiment_ids3 = np.sort(df3.loc[x].reset_index()["Experiment ID"].unique())
+        listexperiments1 = {expid: df3.reset_index().set_index("Experiment ID").loc[expid1]["Drug"].unique() for expid1 in experiment_ids3 }
         st.write(listexperiments1)
         
         #cols1 = st.columns(len(listexperiments))
