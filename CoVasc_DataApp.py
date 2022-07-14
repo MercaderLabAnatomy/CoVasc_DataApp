@@ -348,7 +348,7 @@ if a_state:
         
         #listexperiments = {expid: df3.reset_index().set_index("Experiment ID").loc[expid]["Drug"].unique() for expid in experiment_ids3 }
         
-        st.write(experiment_ids3)
+        st.write(type(experiment_ids3[0]))
         
         #cols1 = st.columns(len(listexperiments))
         
