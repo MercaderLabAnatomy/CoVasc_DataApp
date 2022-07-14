@@ -352,7 +352,7 @@ if a_state:
         
         for id,(col1,experiment1) in enumerate(zip(cols1,listexperiments1)):
             st.write(experiment1)
-            #st.header('Experiment ID: '+ experiment1)
+            st.header('Experiment ID: {}'.format( experiment1))
         #    plot_df3 = df3.reset_index().set_index("Experiment ID").loc[experiment]
         #    fig3 = px.line(df3.loc[x_insert].reset_index(), x="Bin [1 sec]", y="Velocity [mm/s]", color='Drug')
         #   st.plotly_chart(fig3,use_container_width=True)
