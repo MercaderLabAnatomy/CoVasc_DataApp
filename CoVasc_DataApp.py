@@ -356,7 +356,7 @@ if a_state:
         for id,(col1,experiment1) in enumerate(zip(cols1,listexperiments1)):
             
             st.header('Experiment ID: {}'.format( experiment1))
-            st.text('"Accomodation","Bright","Dark","Bright","Dark","Bright","Dark","Bright","Dark","Bright","Dark"')
+            st.text('  "Accomodation"  "Bright"  "Dark"  "Bright"  "Dark"  "Bright"  "Dark"  "Bright"  "Dark"  "Bright"  "Dark"')
             compoundsexperiment1 = list( listexperiments1[experiment1] )
             x_selection = list(set(compoundsexperiment1).intersection(x_insert))
             
