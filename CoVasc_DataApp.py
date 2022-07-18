@@ -367,9 +367,8 @@ if a_state:
             
             for c1,time in enumerate(np.arange(40,150,10)):
                 fig3.add_vline(x=time, line_width=3, line_dash="dash", line_color="green")
-                fig.add_annotation(x=time-5, y=0,
-                    text=phases[c1],
-                    size=18)
+                fig3.add_annotation(x=time-5, y=0,
+                    text=phases[c1])
             st.plotly_chart(fig3,use_container_width=True)
             
     with st.expander("See images of larvae"):
