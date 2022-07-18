@@ -365,7 +365,7 @@ if a_state:
             fig3 = px.line(plot_df3.loc[x_selection].reset_index(), x="Bin [1 sec]", y="Velocity [mm/s]", color='Drug')
             fig3.add_vline(x=30, line_width=3, line_dash="dash", line_color="green")
             for time in np.arange(40,150,10):
-                
+                st.write(["Accomodation","Bright","Dark","Bright","Dark","Bright","Dark","Bright","Dark","Bright","Dark"])
                 fig3.add_vline(x=time, line_width=3, line_dash="dash", line_color="green")
             
             st.plotly_chart(fig3,use_container_width=True)
