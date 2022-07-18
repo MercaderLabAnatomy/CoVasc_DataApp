@@ -355,8 +355,10 @@ if a_state:
         for id,(col1,experiment1) in enumerate(zip(cols1,listexperiments1)):
             
             st.header('Experiment ID: {}'.format( experiment1))
-            st.write(str(experiment1))
+            
             compoundsexperiment1 = list( listexperiments1[experiment1] )
+            st.write(compoundsexperiment1)
+            
             #compoundsexperiment.remove("Control")
             plot_df3 = df3.reset_index().set_index("Experiment ID").loc[int(experiment1)].set_index("Drug")
             
