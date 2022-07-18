@@ -350,7 +350,7 @@ if a_state:
         
         cols1 = st.columns(len(listexperiments1))
         
-        st.dataframe(df3.reset_index().set_index("Experiment ID"))
+        st.dataframe(df3.reset_index().set_index("Experiment ID").loc[0])
         
         #for id,(col1,experiment1) in enumerate(zip(cols1,listexperiments1)):
             #with col1:
