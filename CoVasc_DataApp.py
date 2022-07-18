@@ -343,6 +343,7 @@ if a_state:
             st.plotly_chart(fig2,use_container_width=True)
     
     with st.expander("See swimming plot"):
+        #show a swimming time/swim activity plot
         df3 = getActivityData().set_index("Drug")
         experiment_ids3 = np.sort(df3.loc[x].reset_index()["Experiment ID"].unique())
         listexperiments1 = {expid1: df3.reset_index().set_index("Experiment ID").loc[expid1]["Drug"].unique() for expid1 in experiment_ids3 }
@@ -359,10 +360,10 @@ if a_state:
             compoundsexperiment1 = list( listexperiments1[experiment1] )
             x_selection = list(set(compoundsexperiment1).intersection(x_insert))
             
-            #compoundsexperiment.remove("Control")
             plot_df3 = df3.reset_index().set_index("Experiment ID").loc[int(experiment1)].set_index("Drug")
             
             fig3 = px.line(plot_df3.loc[x_selection].reset_index(), x="Bin [1 sec]", y="Velocity [mm/s]", color='Drug')
+            fig3.add_vline(x=30, line_width=3, line_dash="dash", line_color="green")
             st.plotly_chart(fig3,use_container_width=True)
     
     with st.expander("See images of larvae"):
