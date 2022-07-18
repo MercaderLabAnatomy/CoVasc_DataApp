@@ -356,7 +356,7 @@ if a_state:
         for id,(col1,experiment1) in enumerate(zip(cols1,listexperiments1)):
             
             st.header('Experiment ID: {}'.format( experiment1))
-            st.text('  "Accomodation"  "Bright"  "Dark"  "Bright"  "Dark"  "Bright"  "Dark"  "Bright"  "Dark"  "Bright"  "Dark"')
+            
             compoundsexperiment1 = list( listexperiments1[experiment1] )
             x_selection = list(set(compoundsexperiment1).intersection(x_insert))
             
@@ -364,12 +364,12 @@ if a_state:
             
             fig3 = px.line(plot_df3.loc[x_selection].reset_index(), x="Bin [1 sec]", y="Velocity [mm/s]", color='Drug')
             fig3.add_vline(x=30, line_width=3, line_dash="dash", line_color="green")
+            
             for time in np.arange(40,150,10):
-                
                 fig3.add_vline(x=time, line_width=3, line_dash="dash", line_color="green")
             
             st.plotly_chart(fig3,use_container_width=True)
-    
+            st.text('  "Accomodation"  "Bright"  "Dark"  "Bright"  "Dark"  "Bright"  "Dark"  "Bright"  "Dark"  "Bright"  "Dark"')
     with st.expander("See images of larvae"):
         # ACQ Show images from the acquifer for each compound
         ids=plotdata["Experiment ID"].unique()
