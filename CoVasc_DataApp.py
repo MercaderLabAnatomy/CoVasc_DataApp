@@ -348,7 +348,7 @@ if a_state:
         experiment_ids3 = np.sort(df3.loc[x].reset_index()["Experiment ID"].unique())
         listexperiments1 = {expid1: df3.reset_index().set_index("Experiment ID").loc[expid1]["Drug"].unique() for expid1 in experiment_ids3 }
         #st.write(len(listexperiments1))
-        phases = ["Bright" , "Dark" , "Bright" , "Dark" , "Bright" , "Dark" , "Bright" , "Dark" , "Bright" , "Dark"]
+        phases = ["Bright" , "Dark" , "Bright" , "Dark" , "Bright" , "Dark" , "Bright" , "Dark" , "Bright" , "Dark", "Bright" , "Dark", "Bright" , "Dark"]
         cols1 = st.columns(len(listexperiments1))
         
         #st.dataframe(df3.reset_index().set_index("Experiment ID").loc[0])
