@@ -348,7 +348,7 @@ if a_state:
         experiment_ids3 = np.sort(df3.loc[x].reset_index()["Experiment ID"].unique())
         listexperiments1 = {expid1: df3.reset_index().set_index("Experiment ID").loc[expid1]["Drug"].unique() for expid1 in experiment_ids3 }
         #st.write(len(listexperiments1))
-        
+        phases = ["Bright" , "Dark" , "Bright" , "Dark" , "Bright" , "Dark" , "Bright" , "Dark" , "Bright" , "Dark"]
         cols1 = st.columns(len(listexperiments1))
         
         #st.dataframe(df3.reset_index().set_index("Experiment ID").loc[0])
@@ -365,11 +365,13 @@ if a_state:
             fig3 = px.line(plot_df3.loc[x_selection].reset_index(), x="Bin [1 sec]", y="Velocity [mm/s]", color='Drug')
             fig3.add_vline(x=30, line_width=3, line_dash="dash", line_color="green")
             
-            for time in np.arange(40,150,10):
+            for c1,time in enumerate(np.arange(40,150,10)):
                 fig3.add_vline(x=time, line_width=3, line_dash="dash", line_color="green")
-            
+                fig.add_annotation(x=time-5, y=5,
+                    text=phases[c1],
+                    showarrow=False)
             st.plotly_chart(fig3,use_container_width=True)
-            st.text('  "Accomodation"  "Bright"  "Dark"  "Bright"  "Dark"  "Bright"  "Dark"  "Bright"  "Dark"  "Bright"  "Dark"')
+            
     with st.expander("See images of larvae"):
         # ACQ Show images from the acquifer for each compound
         ids=plotdata["Experiment ID"].unique()
