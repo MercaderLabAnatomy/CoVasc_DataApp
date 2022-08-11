@@ -318,7 +318,7 @@ if a_state:
             st.plotly_chart(fig,use_container_width=True)
     
     with st.expander("See statistics and scores"):
-        df_effscore = get_stats_scores( source="Data/2022-07-28_Morphology_Assay_effectscore.xlsx").loc[x_insert]
+        df_effscore = get_stats_scores( source="Data/2022-07-28_Morphology_Assay_effectscore.xlsx").loc[x]
         st.dataframe(df_effscore)
         
     with st.expander("See activity analysis"):
