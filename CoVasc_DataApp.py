@@ -22,6 +22,7 @@ def getAcquiferData():
     list_measurements = list(df.columns)
     return df,list_measurements
 
+
 def getDaniovisionData():
     source = "Data/2022-08-08_Behavior_Assay_Collected_Measurements_median.xlsx"
     df = pd.read_excel(source)
@@ -176,6 +177,10 @@ def get_indications():
     ind2 = list(df_mmv["Indication 2"].unique())
     return df_mmv, ind1, ind2
 
+def color_negative_red(val):
+    color = 'red' if val < 0 else 'black'
+    return 'color: %s' % color
+
 def authentication():
     name_c = st.secrets["DB_TOKEN"]
     username_c = st.secrets["DB_USERNAME"]
@@ -319,9 +324,6 @@ if a_state:
     
     with st.expander("See statistics and scores"):
         
-        def color_negative_red(val):
-            color = 'red' if val < 0 else 'black'
-        return 'color: %s' % color
         
         st.header("Effect Scores (ES)")
         mask_nonsignificant = st.checkbox('Mask non-significant ES')
