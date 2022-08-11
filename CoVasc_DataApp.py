@@ -291,14 +291,14 @@ if a_state:
         
         if standardize:
             collist1 = ['Drug','Experiment ID','Concentration (µM)','Larval length (µM)', 'Heart rate (BPM)','ISV width (µM)','ISV length (µM)','ISV area (µM)','Number ISV (Count)','Ejection fraction (%)']
-            df1 = standardize_globalMedian(df1 ,collist1, "Control", "Concentration µM")
+            df1 = standardize_globalMedian(df1 ,collist1, "Control", "Concentration (µM)")
         
         df_selected = df1.loc[x_insert].reset_index()
         plotdata = df_selected.set_index("Experiment ID").loc[experiment_ids].reset_index()
         plotdata["Experiment ID"] = plotdata["Experiment ID"].astype(str)
         
         if not conc05:
-            plotdata= plotdata[plotdata["Concentration µM"]==1.0]
+            plotdata= plotdata[plotdata["Concentration (µM)"]==1.0]
            
         
             
@@ -307,11 +307,11 @@ if a_state:
         
         # ACQ Plot the selected measurement 
         if groupbydrug:
-            fig = px.violin(plotdata, y=measurement, x="Drug", color="Drug",facet_col="Concentration µM",category_orders={"Drug":x_insert}, box=True, points="all", hover_data=plotdata.columns)
+            fig = px.violin(plotdata, y=measurement, x="Drug", color="Drug",facet_col="Concentration (µM)",category_orders={"Drug":x_insert}, box=True, points="all", hover_data=plotdata.columns)
             st.plotly_chart(fig,use_container_width=True)
             
         else: 
-            fig = px.violin(plotdata, y=measurement, x="Experiment ID", color="Drug",facet_col="Concentration µM",category_orders={"Drug":x_insert}, box=True, points="all", hover_data=plotdata.columns)
+            fig = px.violin(plotdata, y=measurement, x="Experiment ID", color="Drug",facet_col="Concentration (µM)",category_orders={"Drug":x_insert}, box=True, points="all", hover_data=plotdata.columns)
             st.plotly_chart(fig,use_container_width=True)
 
     with st.expander("See activity analysis"):
