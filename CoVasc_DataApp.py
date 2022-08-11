@@ -23,15 +23,13 @@ def getAcquiferData():
     return df,list_measurements
 
 def getDaniovisionData():
-    source = "Data/CovidDrugScreen_Results_MasterTable_DanioVision.xlsx"
-    df = pd.read_excel(source).reset_index()
-    df = df.drop(["Unnamed: 0", "Folder", "File","Combo"],axis=1).reset_index()
-    df = df.rename(columns= {"Concentration": "Concentration µM"})
-    df = df.pivot(index=["Drug","Well","Experiment ID","Concentration µM","Replicate"], columns="Phase", values=['Distance_moved [mm]', 'Velocity [mm/s]', 'Moving [s]',
-       'Not_Moving [s]'])
-    #df= df.reset_index()
-    df.columns=df.columns.map(('|'.join)).str.strip('|')
-    return df
+    source = "Data/2022-08-08_Behavior_Assay_Collected_Measurements_median.xlsx"
+    df = pd.read_excel(source)
+    df = df.drop(["Unnamed: 0","Replicate","Well"],axis=1)
+    df = df.set_index(["Drug","Experiment ID","Concentration (µM)"])
+    list_measurements = list(df.columns)
+    
+    return df, list_measurements
 
 def getActivityData():
     source = "Data/CovidDrugScreen_Results_MeanActivity_Daniovision.csv"
@@ -315,31 +313,31 @@ if a_state:
             st.plotly_chart(fig,use_container_width=True)
 
     with st.expander("See activity analysis"):
-        df2 = getDaniovisionData()
-        measurement2 = st.selectbox('Toggle between ', df2.columns)
+        df2, measurements2 = getDaniovisionData()
+        measurement2 = st.selectbox('Toggle between ', measurements2)
         standardize2 = st.checkbox('Standardize activity data to global control median')
         groupbydrug2 = st.checkbox('Group activity graphs by drug')
         
         if standardize2:
             collist2 = list(df2.reset_index().columns)
-            df2 = standardize_globalMedian(df2 ,collist2, "Control", ["Concentration µM","Replicate"])
+            df2 = standardize_globalMedian(df2 ,collist2, "Control", "Concentration (µM)")
         
-        experiment_ids2=np.sort(df2.loc[x].reset_index()["Experiment ID"].unique())
-        df_selected2=df2.loc[x_insert].reset_index()
+        experiment_ids2 = np.sort(df2.loc[x].reset_index()["Experiment ID"].unique())
+        df_selected2 = df2.loc[x_insert].reset_index()
         
         
-        plotdata2=df_selected2.set_index("Experiment ID").loc[experiment_ids2].reset_index()
+        plotdata2 = df_selected2.set_index("Experiment ID").loc[experiment_ids2].reset_index()
         plotdata2["Experiment ID"] = plotdata2["Experiment ID"].astype(str)
 
         if not conc05:
-            plotdata2= plotdata2[plotdata2["Concentration µM"]==1.0]
+            plotdata2 = plotdata2[plotdata2["Concentration (µM)"]==1.0]
         
         if groupbydrug2:
-            fig2 = px.violin(plotdata2, y=measurement2, x="Drug", color="Drug",facet_col="Concentration µM",category_orders={"Drug":x_insert}, box=True, points="all",hover_data=plotdata2.columns)
+            fig2 = px.violin(plotdata2, y=measurement2, x="Drug", color="Drug",facet_col="Concentration (µM)",category_orders={"Drug":x_insert}, box=True, points="all",hover_data=plotdata2.columns)
             st.plotly_chart(fig2,use_container_width=True)
 
         else:
-            fig2 = px.violin(plotdata2, y=measurement2, x="Experiment ID", color="Drug",facet_col="Concentration µM",category_orders={"Drug":x_insert}, box=True, points="all",hover_data=plotdata2.columns)
+            fig2 = px.violin(plotdata2, y=measurement2, x="Experiment ID", color="Drug",facet_col="Concentration (µM)",category_orders={"Drug":x_insert}, box=True, points="all",hover_data=plotdata2.columns)
             st.plotly_chart(fig2,use_container_width=True)
     
     with st.expander("See swimming plot"):
