@@ -319,7 +319,7 @@ if a_state:
     
     with st.expander("See statistics and scores"):
         df_effscore = get_stats_scores( source="Data/2022-07-28_Morphology_Assay_effectscore.xlsx").loc[x]
-        st.dataframe(df_effscore)
+        st.dataframe(df_effscore, use_container_width=True)
         
     with st.expander("See activity analysis"):
         df2, measurements2 = getDaniovisionData()
