@@ -55,6 +55,11 @@ def get_scores():
     
     return df_
 
+def get_stats_scores(source="Data/2022-07-28_Morphology_Assay_stars.xlsx"):
+    df = pd.read_excel(source,index_col=[0,1])
+    df.index = df.index.set_names( ['Drug','Concentration (µM)'])
+    return df
+    
 def survival_plot(inputdata,druglist):
     inputdata = inputdata.set_index(["Drug"]) 
     druglist=[i for i in druglist if i in list(inputdata.index)]
@@ -311,7 +316,11 @@ if a_state:
         else: 
             fig = px.violin(plotdata, y=measurement, x="Experiment ID", color="Drug",facet_col="Concentration (µM)",category_orders={"Drug":x_insert}, box=True, points="all", hover_data=plotdata.columns)
             st.plotly_chart(fig,use_container_width=True)
-
+    
+    with st.expander("See statistics and scores"):
+        df_effscore = get_stats_scores( source="Data/2022-07-28_Morphology_Assay_effectscore.xlsx")
+        st.dataframe(df_effscore)
+        
     with st.expander("See activity analysis"):
         df2, measurements2 = getDaniovisionData()
         measurement2 = st.selectbox('Toggle between ', measurements2)
