@@ -181,7 +181,7 @@ def color_negative_red(val):
     color = 'red' if val < 0 else 'black'
     if val > 0:
         color = 'green'    
-    return 'color: %s' % color
+    return 'background-color: %s' % color
 
 def authentication():
     name_c = st.secrets["DB_TOKEN"]
