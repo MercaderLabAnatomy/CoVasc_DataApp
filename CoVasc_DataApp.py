@@ -17,10 +17,10 @@ def getAcquiferData():
     # ACQ function to load data
     source = "Data/2022-07-28_Morphology_Assay_Collected_Measurements.xlsx"
     df = pd.read_excel(source)
-    df = df.drop(["Label","image_name", "Well","Heart Beats (Count)","Frames (Count)","Avg_Frametime (ms)", 	"Sum_Frametime (ms)","Repeat","TRIVIAL_NAME","Count_ISV"],axis=1)
+    df = df.drop(["Label","image_name", "Well","Heart Beats (Count)","Frames (Count)","Avg_Frametime (ms)", "Sum_Frametime (ms)","Repeat","TRIVIAL_NAME","Count_ISV","Edema"],axis=1)
     df = df.set_index(["Drug","Experiment ID","Concentration (µM)"])
-    
-    return df
+    list_measurements = list(df.columns)
+    return df,list_measurements
 
 def getDaniovisionData():
     source = "Data/CovidDrugScreen_Results_MasterTable_DanioVision.xlsx"
@@ -207,7 +207,7 @@ st.image(image)
 
 df_indications, i1, i2 = get_indications()
 
-df1 = getAcquiferData()
+df1, df1_measurements = getAcquiferData()
 
 
 
@@ -290,7 +290,7 @@ if a_state:
         groupbydrug = st.checkbox('Group morphological graphs by drug')
         
         if standardize:
-            collist1 = ['Drug','Experiment ID','Concentration (µM)','Larval length (µM)', 'Heart rate (BPM)','ISV width (µM)','ISV length (µM)','ISV area (µM)','Number ISV (Count)','Ejection fraction (%)']
+            collist1 = list(df1.columns)
             df1 = standardize_globalMedian(df1 ,collist1, "Control", "Concentration (µM)")
         
         df_selected = df1.loc[x_insert].reset_index()
@@ -303,7 +303,7 @@ if a_state:
         
             
         # ACQ Choose the measurement to plot
-        measurement = st.selectbox('Toggle between ', ('Larval length (µM)', 'Heart rate (BPM)','ISV width (µM)','ISV length (µM)','Number ISV (Count)','Ejection fraction (%)'))
+        measurement = st.selectbox('Toggle between ', df1_measurements)
         
         # ACQ Plot the selected measurement 
         if groupbydrug:
@@ -374,9 +374,9 @@ if a_state:
             
     with st.expander("See images of larvae"):
         # ACQ Show images from the acquifer for each compound
-        ids=plotdata["Experiment ID"].unique()
-        plotimages=plotdata.set_index("Experiment ID").loc[ids[0]]["Drug"].unique()
-        listexperiments={expid: plotdata.set_index("Experiment ID").loc[expid]["Drug"].unique() for expid in ids }
+        ids = plotdata["Experiment ID"].unique()
+        plotimages = plotdata.set_index("Experiment ID").loc[ids[0]]["Drug"].unique()
+        listexperiments = {expid: plotdata.set_index("Experiment ID").loc[expid]["Drug"].unique() for expid in ids }
         cols = st.columns(len(listexperiments))
 
         for id,(col,experiment) in enumerate(zip(cols,listexperiments)):
