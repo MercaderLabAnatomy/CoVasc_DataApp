@@ -18,7 +18,7 @@ def getAcquiferData():
     source = "Data/2022-07-28_Morphology_Assay_Collected_Measurements.xlsx"
     df = pd.read_excel(source)
     df = df.drop(["Label","image_name", "Well","Heart Beats (Count)","Frames (Count)","Avg_Frametime (ms)", 	"Sum_Frametime (ms)","Repeat","TRIVIAL_NAME","Count_ISV"],axis=1)
-    df = df.set_index(["Drug","Experiment ID","Concentration µM"])
+    df = df.set_index(["Drug","Experiment ID","Concentration (µM)"])
     
     return df
 
