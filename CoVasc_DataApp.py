@@ -178,7 +178,8 @@ def get_indications():
     return df_mmv, ind1, ind2
 
 def color_negative_red(val):
-    color = 'red' if val < 0 else 'black'
+    color = 'red' if val < 0 elif val > 0 'green'
+    
     return 'color: %s' % color
 
 def authentication():
