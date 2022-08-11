@@ -290,7 +290,7 @@ if a_state:
         groupbydrug = st.checkbox('Group morphological graphs by drug')
         
         if standardize:
-            collist1 = list(df1.columns)
+            collist1 = list(df1.reset_index().columns)
             df1 = standardize_globalMedian(df1 ,collist1, "Control", "Concentration (µM)")
         
         df_selected = df1.loc[x_insert].reset_index()
