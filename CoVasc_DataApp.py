@@ -320,6 +320,9 @@ if a_state:
     with st.expander("See statistics and scores"):
         st.header("Effect Scores (ES)")
         df_effscore = get_stats_scores( source="Data/2022-07-28_Morphology_Assay_effectscore.xlsx").loc[x]
+        df_pval = get_stats_scores( source="Data/2022-07-28_Morphology_Assay_pvalues.xlsx").loc[x]
+        df_effscore[df_pval > 0.05] = 0
+        
         st.dataframe(df_effscore)
         
     with st.expander("See activity analysis"):
