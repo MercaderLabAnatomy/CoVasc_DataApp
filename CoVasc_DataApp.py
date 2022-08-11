@@ -318,6 +318,11 @@ if a_state:
             st.plotly_chart(fig,use_container_width=True)
     
     with st.expander("See statistics and scores"):
+        
+        def color_negative_red(val):
+            color = 'red' if val < 0 else 'black'
+        return 'color: %s' % color
+        
         st.header("Effect Scores (ES)")
         mask_nonsignificant = st.checkbox('Mask non-significant ES')
         df_effscore = get_stats_scores( source="Data/2022-07-28_Morphology_Assay_effectscore.xlsx").loc[x]
@@ -335,7 +340,7 @@ if a_state:
         df_effscore.columns = [s.split(" (")[0] for s in df_effscore.columns]
         df_effscore_merge = df_effscore.join(df_effscore2)
         
-        st.dataframe(df_effscore_merge)
+        st.dataframe(df_effscore_merge.style.applymap(color_negative_red))
         
         
         
