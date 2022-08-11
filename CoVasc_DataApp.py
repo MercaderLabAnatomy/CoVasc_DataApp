@@ -319,7 +319,7 @@ if a_state:
     
     with st.expander("See statistics and scores"):
         st.header("Effect Scores (ES)")
-        mask_nonsignificant = st.sidebar.checkbox('Mask non-significant ES')
+        mask_nonsignificant = st.checkbox('Mask non-significant ES')
         df_effscore = get_stats_scores( source="Data/2022-07-28_Morphology_Assay_effectscore.xlsx").loc[x]
         df_effscore2 = get_stats_scores(source="Data/2022-08-08_Behavior_Assay_effectscore.xlsx").loc[x]
         
