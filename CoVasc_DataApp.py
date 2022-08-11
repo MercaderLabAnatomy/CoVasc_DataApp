@@ -178,7 +178,7 @@ def get_indications():
     return df_mmv, ind1, ind2
 
 def color_negative_red(val):
-    color = 'red' if val < 0 else 'black'
+    color = 'red' if val < 0 else 'white'
     if val > 0:
         color = 'green'    
     return 'background-color: %s' % color
