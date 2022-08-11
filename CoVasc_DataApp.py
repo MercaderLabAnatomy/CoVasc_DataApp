@@ -15,10 +15,10 @@ from glob import glob
 
 def getAcquiferData():
     # ACQ function to load data
-    source = "Data/CovidDrugScreen_Results_MasterTable_FramerateCorrected.xlsx"
+    source = "Data/2022-07-28_Morphology_Assay_Collected_Measurements.xlsx"
     df = pd.read_excel(source)
-    df = df.drop(["Unnamed: 0",'Machine', 'Folder', 'Image_title_x','Drug_x','Drug_y', 'image_name', 'Well.1','Unnamed: 21', 'Well.2','Folder_10x', 'Heart_rate','Path_10x','Drug.1',"Hearbeat_x","Corrected_Framerate","Edema"],axis=1)
-    df = df.set_index(["Drug","Experiment ID","Concentration µM","Repeat"])
+    df = df.drop(["Label","image_name", "Well","Heart Beats (Count)","Frames (Count)","Avg_Frametime (ms)", 	"Sum_Frametime (ms)","Repeat","TRIVIAL_NAME","Count_ISV"],axis=1)
+    df = df.set_index(["Drug","Experiment ID","Concentration µM"])
     
     return df
 
@@ -87,19 +87,19 @@ def standardize_globalMedian(df_,collist, reference, index_columns):
     return df_standardized    
 
 def get_subset_results(df_,druglist):
-        subset= df_.loc[druglist]
-        #count_total = subset["Count_None"]
-        count_others = subset["Count_None"] - subset["Count_Dev"] - subset["Count_Heart"] - subset["Count_Covid"] 
-        
-        count_dev = subset["Count_Dev"] - subset["Count_Heart_Dev"] - subset["Count_Dev_Covid"]
+    subset= df_.loc[druglist]
+    #count_total = subset["Count_None"]
+    count_others = subset["Count_None"] - subset["Count_Dev"] - subset["Count_Heart"] - subset["Count_Covid"] 
+    
+    count_dev = subset["Count_Dev"] - subset["Count_Heart_Dev"] - subset["Count_Dev_Covid"]
 
-        count_heart = subset["Count_Heart"] - subset["Count_Heart_Dev"] - subset["Count_Heart_Covid"]
-        
-        count_covid = subset["Count_Covid"] - subset["Count_Dev_Covid"] - subset["Count_Heart_Covid"]
-        
-        subset_summary = pd.DataFrame({"Others":count_others, "Development": count_dev, "Cardiovascular": count_heart, "Covid": count_covid, 
-        "Cardiovas.-Dev.": subset["Count_Heart_Dev"], "Covid-Dev.": subset["Count_Dev_Covid"],"Covid-Cardiovas.": subset["Count_Heart_Covid"]})
-        return subset_summary.where(subset_summary > 0,0).T
+    count_heart = subset["Count_Heart"] - subset["Count_Heart_Dev"] - subset["Count_Heart_Covid"]
+    
+    count_covid = subset["Count_Covid"] - subset["Count_Dev_Covid"] - subset["Count_Heart_Covid"]
+    
+    subset_summary = pd.DataFrame({"Others":count_others, "Development": count_dev, "Cardiovascular": count_heart, "Covid": count_covid, 
+    "Cardiovas.-Dev.": subset["Count_Heart_Dev"], "Covid-Dev.": subset["Count_Dev_Covid"],"Covid-Cardiovas.": subset["Count_Heart_Covid"]})
+    return subset_summary.where(subset_summary > 0,0).T
 
 def plot_pies(df_):
     row_ = int(np.ceil(len(df_.columns)/4))
@@ -210,7 +210,7 @@ df_indications, i1, i2 = get_indications()
 df1 = getAcquiferData()
 
 
-df1 = df1.rename(columns = {'Length':'Larval length (µM)','Heart_BPM':'Heart rate (BPM)','Median_minor_axis_length':'ISV width (µM)','Median_major_axis_length':'ISV length (µM)','N_ISV':'Number ISV (Count)','Delta_DIA-SYS':'Ejection fraction (%)'}) 
+
 druglist = df1.index.levels[0].tolist()
 druglist1 = ["Remdesivir_1A06","Hydroxychloroquine_1F11","Lopinavir_1H04","Ritonavir_1A11","Favipiravir_1D10","Ivermectin_1F05","Ribavirin_1F08"
 ,"Umifenovir_2E02","Baricitinib_2C09","Mycophenolic acid_2B10"]
@@ -290,7 +290,7 @@ if a_state:
         groupbydrug = st.checkbox('Group morphological graphs by drug')
         
         if standardize:
-            collist1 = ['Drug','Experiment ID','Concentration µM','Larval length (µM)', 'Heart rate (BPM)','ISV width (µM)','ISV length (µM)','Number ISV (Count)','Ejection fraction (%)']
+            collist1 = ['Drug','Experiment ID','Concentration (µM)','Larval length (µM)', 'Heart rate (BPM)','ISV width (µM)','ISV length (µM)','ISV area (µM)','Number ISV (Count)','Ejection fraction (%)']
             df1 = standardize_globalMedian(df1 ,collist1, "Control", "Concentration µM")
         
         df_selected = df1.loc[x_insert].reset_index()
