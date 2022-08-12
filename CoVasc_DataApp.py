@@ -240,8 +240,8 @@ if a_state:
     if ind_primary:
         x.clear()
         x = list(df_indications.set_index('Indication 1').loc[ind_primary]["Drug"].values)
-
-    conc05 = st.sidebar.checkbox('Show also Concentration 0.5 µM')
+    st.sidebar.write('By default only 1 µM treatment is shown')
+    conc05 = st.sidebar.checkbox('Show all concentrations')
 
     if conc05:
          st.write('Showing 0.5 µM and 1 µM treatment concentration. Only a subset of compounds were tested at 0.5 µM.')
