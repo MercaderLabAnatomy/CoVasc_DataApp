@@ -235,7 +235,7 @@ if a_state:
 
     x = st.sidebar.multiselect('Choose Compounds', druglist, druglist1)
     ind_primary = st.sidebar.multiselect('Optional: Choose by primary drug indication', i1, [])
-    ind_secondary = st.sidebar.multiselect('Optional: Choose by secondary drug indication', i2, [])
+    #ind_secondary = st.sidebar.multiselect('Optional: Choose by secondary drug indication', i2, [])
 
     if ind_primary:
         x.clear()
