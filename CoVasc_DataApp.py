@@ -329,12 +329,20 @@ if a_state:
         
         st.header("Effect Scores (ES)")
         mask_nonsignificant = st.checkbox('Mask non-significant ES')
-        df_effscore = get_stats_scores( source="Data/2022-07-28_Morphology_Assay_effectscore.xlsx").loc[x]
-        df_effscore2 = get_stats_scores(source="Data/2022-08-08_Behavior_Assay_effectscore.xlsx").loc[x]
+        all_drugs = st.checkbox('Show all drugs')
+        if not all_drugs:
+            df_effscore = get_stats_scores( source="Data/2022-07-28_Morphology_Assay_effectscore.xlsx").loc[x]
+            df_effscore2 = get_stats_scores(source="Data/2022-08-08_Behavior_Assay_effectscore.xlsx").loc[x]
+            
+            df_pval = get_stats_scores( source="Data/2022-07-28_Morphology_Assay_pvalues.xlsx").loc[x]
+            df_pval2 = get_stats_scores( source="Data/2022-08-08_Behavior_Assay_pvalues.xlsx").loc[x]
         
-        df_pval = get_stats_scores( source="Data/2022-07-28_Morphology_Assay_pvalues.xlsx").loc[x]
-        df_pval2 = get_stats_scores( source="Data/2022-08-08_Behavior_Assay_pvalues.xlsx").loc[x]
-        
+        else:
+            df_effscore = get_stats_scores( source="Data/2022-07-28_Morphology_Assay_effectscore.xlsx")
+            df_effscore2 = get_stats_scores(source="Data/2022-08-08_Behavior_Assay_effectscore.xlsx")
+            
+            df_pval = get_stats_scores( source="Data/2022-07-28_Morphology_Assay_pvalues.xlsx")
+            df_pval2 = get_stats_scores( source="Data/2022-08-08_Behavior_Assay_pvalues.xlsx")
         
         if mask_nonsignificant:
             df_effscore[df_pval > 0.05] = 0
