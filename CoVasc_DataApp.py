@@ -355,9 +355,12 @@ if a_state:
         es = st.selectbox('Choose Measurement', [""] + list(df_effscore_merge.columns))
         
         if es:
-               limit = st.slider("ES > |X|", 0, 100)
-               df_effscore_merge = df_effscore_merge[df_effscore_merge[es].abs() > limit]
-            
+            limit = st.slider("|ES| > X", 0, 100)
+            df_effscore_merge = df_effscore_merge[df_effscore_merge[es].abs() > limit]
+            dis1, dis2, dis3 = st.columns(3)
+            dis1.metric("N Drugs |ES| > X", df_effscore_merge.count()[0])
+            dis2.metric("Wind", "9 mph", "-8%")
+            dis3.metric("Humidity", "86%", "4%") 
             
         st.dataframe(df_effscore_merge.style.applymap(color_negative_red))
         
