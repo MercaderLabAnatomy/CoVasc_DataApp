@@ -355,8 +355,7 @@ if a_state:
         
         if es:
                limit = st.slider("ES > |X|", value=(-100, 100))
-               df_effscore_merge = df_effscore_merge.loc[df_effscore_merge[es].abs() > limit] 
-        
+               df_effscore_merge = df_effscore_merge.loc[df_effscore_merge[es].abs() > limit]
             
             
         st.dataframe(df_effscore_merge.style.applymap(color_negative_red))
