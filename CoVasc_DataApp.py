@@ -351,7 +351,14 @@ if a_state:
         
         df_effscore.columns = [s.split(" (")[0] for s in df_effscore.columns]
         df_effscore_merge = df_effscore.join(df_effscore2)
+        es = st.sidebar.selectbox('Choose Measurement', list(df_effscore_merge.columns))
         
+        if es:
+               limit = st.slider("ES > |X|", value=(-100, 100))
+               df_effscore_merge = df_effscore_merge.loc[df_effscore_merge[es].abs() > limit] 
+        
+            
+            
         st.dataframe(df_effscore_merge.style.applymap(color_negative_red))
         
         
