@@ -330,6 +330,7 @@ if a_state:
         st.header("Effect Scores (ES)")
         mask_nonsignificant = st.checkbox('Mask non-significant ES')
         all_drugs = st.checkbox('Show all drugs')
+        
         if not all_drugs:
             df_effscore = get_stats_scores( source="Data/2022-07-28_Morphology_Assay_effectscore.xlsx").loc[x]
             df_effscore2 = get_stats_scores(source="Data/2022-08-08_Behavior_Assay_effectscore.xlsx").loc[x]
@@ -351,7 +352,7 @@ if a_state:
         
         df_effscore.columns = [s.split(" (")[0] for s in df_effscore.columns]
         df_effscore_merge = df_effscore.join(df_effscore2)
-        es = st.sidebar.selectbox('Choose Measurement', list(df_effscore_merge.columns))
+        es = st.selectbox('Choose Measurement', list(df_effscore_merge.columns),[])
         
         if es:
                limit = st.slider("ES > |X|", value=(0, 100))
