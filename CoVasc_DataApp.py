@@ -355,7 +355,7 @@ if a_state:
         es = st.selectbox('Choose Measurement', [""] + list(df_effscore_merge.columns))
         
         if es:
-               limit = st.slider("ES > |X|", value=(0, 100))
+               limit = st.slider("ES > |X|", 0, 100)
                df_effscore_merge = df_effscore_merge[df_effscore_merge[es].abs() > limit]
             
             
