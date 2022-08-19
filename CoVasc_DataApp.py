@@ -360,7 +360,7 @@ if a_state:
                df_effscore_merge = df_effscore_merge[(df_effscore_merge[es].abs() > limit)]
             else:
                 df_effscore_merge = df_effscore_merge[(df_effscore_merge[es].abs() > limit)]
-                df_effscore_merge = df_effscore_merge[([(i[1] == 1.0) & (i[0] != "Apilimod_1B03") for i in df_effscore_merge[es].index]) | ( [i[0] == "Ivermectin_1F05" for i in df_effscore_merge[es].index])|( [i[0] == "Niclosamide_1A02" for i in df_effscore_merge[es].index]) | ( [((i[0] == "Apilimod_1B03") & (i[1] == 0.5)) for i in df_effscore_merge[es].index])]
+                df_effscore_merge = df_effscore_merge[([(i[1] == 1.0) & (i[0] != "Apilimod_1B03") for i in df_effscore_merge[es].index]) or ( [i[0] == "Ivermectin_1F05" for i in df_effscore_merge[es].index]) or ( [i[0] == "Niclosamide_1A02" for i in df_effscore_merge[es].index]) or ( [((i[0] == "Apilimod_1B03") & (i[1] == 0.5)) for i in df_effscore_merge[es].index])]
             
             dis1, dis2, dis3, dis4 = st.columns(4)
             dis1.metric("N Drugs |ES| > X", df_effscore_merge.count()[0])
