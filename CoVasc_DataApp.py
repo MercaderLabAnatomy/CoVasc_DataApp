@@ -357,6 +357,7 @@ if a_state:
         if es:
             limit = st.slider("|ES| > X", 0, 100)
             scol = df_effscore_merge[es]
+            
             if conc05:
                df_effscore_merge = df_effscore_merge[(scol.abs() > limit)]
             else:
