@@ -356,7 +356,10 @@ if a_state:
         
         if es:
             limit = st.slider("|ES| > X", 0, 100)
-            df_effscore_merge = df_effscore_merge[(df_effscore_merge[es].abs() > limit) & [i[1] == 1.0 for i in df_effscore_merge[es].index]]
+            if conc05:
+               df_effscore_merge = df_effscore_merge[(df_effscore_merge[es].abs() > limit)]
+            else:
+                df_effscore_merge = df_effscore_merge[((df_effscore_merge[es].abs() > limit) & [i[1] == 1.0 for i in df_effscore_merge[es].index]) | ( [i[0] == "Ivermectin_1F05" for i in df_effscore_merge[es].index])|( [i[0] == "Niclosamide_1A02" for i in df_effscore_merge[es].index])]
             dis1, dis2, dis3, dis4 = st.columns(4)
             dis1.metric("N Drugs |ES| > X", df_effscore_merge.count()[0])
             dis2.metric("Percent Drugs |ES| > X", df_effscore_merge.count()[0]/161)
