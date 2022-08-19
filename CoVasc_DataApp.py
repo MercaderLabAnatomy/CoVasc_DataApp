@@ -362,8 +362,9 @@ if a_state:
                df_effscore_merge = df_effscore_merge[(scol.abs() > limit)]
             else:
                 df_effscore_merge = df_effscore_merge[(scol.abs() > limit)]
-                scol = df_effscore_merge[es]
-                df_effscore_merge = df_effscore_merge[([(i[1] == 1.0) & (i[0] != "Apilimod_1B03") for i in scol.index]) ]
+                include = ([((i[1] == 1.0) & (i[0] != "Apilimod_1B03")) | (i[0] == "Ivermectin_1F05") | (i[0] == "Niclosamide_1A02") | ((i[0] == "Apilimod_1B03") & (i[1] == 0.5)) for i in df_effscore_merge.index]) 
+                
+                df_effscore_merge = df_effscore_merge[include]
             
             scol = df_effscore_merge[es]
             
