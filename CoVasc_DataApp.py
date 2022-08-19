@@ -357,10 +357,11 @@ if a_state:
         if es:
             limit = st.slider("|ES| > X", 0, 100)
             df_effscore_merge = df_effscore_merge[df_effscore_merge[es].abs() > limit]
-            dis1, dis2, dis3 = st.columns(3)
+            dis1, dis2, dis3, dis4 = st.columns(4)
             dis1.metric("N Drugs |ES| > X", df_effscore_merge.count()[0])
-            dis2.metric("MAX ES", df_effscore_merge[es].max(), str(df_effscore_merge[es][df_effscore_merge[es] == df_effscore_merge[es].max()].index[0]))
-            dis3.metric("MIN ES", df_effscore_merge[es].min(), str(df_effscore_merge[es][df_effscore_merge[es] == df_effscore_merge[es].min()].index[0]))
+            dis2.metric("Percent Drugs |ES| > X", df_effscore_merge.count()[0]/161)
+            dis3.metric("MAX ES", df_effscore_merge[es].max(), str(df_effscore_merge[es][df_effscore_merge[es] == df_effscore_merge[es].max()].index[0]))
+            dis4.metric("MIN ES", df_effscore_merge[es].min(), str(df_effscore_merge[es][df_effscore_merge[es] == df_effscore_merge[es].min()].index[0]))
             
         st.dataframe(df_effscore_merge.style.applymap(color_negative_red))
         
