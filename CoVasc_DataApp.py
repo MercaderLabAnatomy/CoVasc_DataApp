@@ -356,17 +356,21 @@ if a_state:
         
         if es:
             limit = st.slider("|ES| > X", 0, 100)
+            scol = df_effscore_merge[es]
             if conc05:
-               df_effscore_merge = df_effscore_merge[(df_effscore_merge[es].abs() > limit)]
+               df_effscore_merge = df_effscore_merge[(scol.abs() > limit)]
             else:
-                df_effscore_merge = df_effscore_merge[(df_effscore_merge[es].abs() > limit)]
-                df_effscore_merge = df_effscore_merge[([(i[1] == 1.0) & (i[0] != "Apilimod_1B03") for i in df_effscore_merge[es].index]) or ( [i[0] == "Ivermectin_1F05" for i in df_effscore_merge[es].index]) or ( [i[0] == "Niclosamide_1A02" for i in df_effscore_merge[es].index]) or ( [((i[0] == "Apilimod_1B03") & (i[1] == 0.5)) for i in df_effscore_merge[es].index])]
+                df_effscore_merge = df_effscore_merge[(scol.abs() > limit)]
+                scol = df_effscore_merge[es]
+                df_effscore_merge = df_effscore_merge[([(i[1] == 1.0) & (i[0] != "Apilimod_1B03") for i in scol.index]) or ( [i[0] == "Ivermectin_1F05" for i in scol.index]) or ( [i[0] == "Niclosamide_1A02" for i in scol.index]) or ( [((i[0] == "Apilimod_1B03") & (i[1] == 0.5)) for i in scol.index])]
+            
+            scol = df_effscore_merge[es]
             
             dis1, dis2, dis3, dis4 = st.columns(4)
             dis1.metric("N Drugs |ES| > X", df_effscore_merge.count()[0])
             dis2.metric("Percent Drugs |ES| > X", df_effscore_merge.count()[0]/161)
-            dis3.metric("MAX ES", df_effscore_merge[es].max(), str(df_effscore_merge[es][df_effscore_merge[es] == df_effscore_merge[es].max()].index[0]))
-            dis4.metric("MIN ES", df_effscore_merge[es].min(), str(df_effscore_merge[es][df_effscore_merge[es] == df_effscore_merge[es].min()].index[0]))
+            dis3.metric("MAX ES", scol.max(), str(scol[scol == scol.max()].index[0]))
+            dis4.metric("MIN ES", scol.min(), str(scol[scol == scol.min()].index[0]))
             
         st.dataframe(df_effscore_merge.style.applymap(color_negative_red))
         
