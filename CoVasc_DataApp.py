@@ -45,9 +45,9 @@ def getSurvivalData():
     return (df_acquifer,df_daniovision)
 
 def get_literature_results():
-    df_lit = pd.read_excel("Data/CovidDrugScreen_Results_Literature_intersection_2022-07-12.xlsx")
-    df_lit_counts = df_lit[df_lit.columns[[2,3,5,7,9,12,14,16]]].set_index("Tag")
-    return df_lit_counts
+    df_lit = pd.read_excel("Data/CovidDrugScreen_Results_Literature_intersection_2022-07-12.xlsx",header=[0,1]).dropna().drop("Unnamed: 0_level_0", axis = 1).set_index(("Origin","Tag"))
+    
+    return df_lit
 
 def get_scores():
     df_ = pd.read_excel("Data/CovidDrugScreen_Score_Threshold_Scaled.xlsx").rename(columns={"Unnamed: 0":"Drug"}).set_index("Drug")
@@ -93,16 +93,16 @@ def standardize_globalMedian(df_,collist, reference, index_columns):
 def get_subset_results(df_,druglist):
     subset= df_.loc[druglist]
     #count_total = subset["Count_None"]
-    count_others = subset["Count_None"] - subset["Count_Dev"] - subset["Count_Heart"] - subset["Count_Covid"] 
+    count_others = subset[("No","Count")] - subset[("embryo","Count")] - subset[("heart","Count")] - subset[("Covid-19","Count")] 
     
-    count_dev = subset["Count_Dev"] - subset["Count_Heart_Dev"] - subset["Count_Dev_Covid"]
+    count_dev = subset[("embryo","Count")] - subset[("heart-embryo","Intersection")]
 
-    count_heart = subset["Count_Heart"] - subset["Count_Heart_Dev"] - subset["Count_Heart_Covid"]
+    count_heart = subset[("heart","Count")] - subset[("heart-embryo","Intersection")]
     
-    count_covid = subset["Count_Covid"] - subset["Count_Dev_Covid"] - subset["Count_Heart_Covid"]
+    count_covid = subset[("Covid-19","Count")]
     
     subset_summary = pd.DataFrame({"Others":count_others, "Development": count_dev, "Cardiovascular": count_heart, "Covid": count_covid, 
-    "Cardiovas.-Dev.": subset["Count_Heart_Dev"], "Covid-Dev.": subset["Count_Dev_Covid"],"Covid-Cardiovas.": subset["Count_Heart_Covid"]})
+    "Cardiovas.-Dev.": subset[("heart-embryo","Intersection")]})
     return subset_summary.where(subset_summary > 0,0).T
 
 def plot_pies(df_):
