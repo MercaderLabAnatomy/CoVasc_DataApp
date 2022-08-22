@@ -346,8 +346,8 @@ if a_state:
             df_pval2 = get_stats_scores( source="Data/2022-08-08_Behavior_Assay_pvalues.xlsx")
         
         if mask_nonsignificant:
-            df_effscore[df_pval > 0.05] = 0
-            df_effscore2[df_pval2 > 0.05] = 0
+            df_effscore[df_pval >= 0.05] = 0
+            df_effscore2[df_pval2 >= 0.05] = 0
             
         
         df_effscore.columns = [s.split(" (")[0] for s in df_effscore.columns]
