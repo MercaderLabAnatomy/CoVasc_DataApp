@@ -45,7 +45,7 @@ def getSurvivalData():
     return (df_acquifer,df_daniovision)
 
 def get_literature_results():
-    df_lit = pd.read_excel("Data/CovidDrugScreen_Results_Literature_intersection.xlsx")
+    df_lit = pd.read_excel("Data/CovidDrugScreen_Results_Literature_intersection_2022-07-12.xlsx")
     df_lit_counts = df_lit[df_lit.columns[[2,3,5,7,9,12,14,16]]].set_index("Tag")
     return df_lit_counts
 
