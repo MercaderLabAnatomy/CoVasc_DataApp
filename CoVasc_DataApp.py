@@ -351,7 +351,7 @@ if a_state:
             
         
         df_effscore.columns = [s.split(" (")[0] for s in df_effscore.columns]
-        df_effscore_merge = pd.concat([df_effscore,df_effscore2], axis=1)
+        df_effscore_merge = pd.merge(df_effscore,df_effscore2, on=["Drug","Concentration (µM)"])
         df_effscore_merge.loc[("Doxorubicin_2A05",1.0),"Ejection fraction"] = np.nan
         es = st.selectbox('Choose Measurement', [""] + list(df_effscore_merge.columns))
         
