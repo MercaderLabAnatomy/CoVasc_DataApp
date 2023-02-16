@@ -11,7 +11,7 @@ from PIL import Image
 from glob import glob
 
 
-@st.cache(persist=True)
+@st.cache_data
 
 def getAcquiferData():
     # ACQ function to load data
