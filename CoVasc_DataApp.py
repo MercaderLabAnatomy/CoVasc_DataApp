@@ -45,7 +45,7 @@ def getSurvivalData():
     return (df_acquifer,df_daniovision)
 
 def get_literature_results():
-    df_lit = pd.read_excel("Data/2023-01-20_LiteratureSearch_Results.xlsx",header=[0,1]).dropna().drop("Unnamed: 0_level_0", axis = 1).set_index(("Origin","Tag"))
+    df_lit = pd.read_excel("Data/2023-01-20_LiteratureSearch_Results.xlsx",header=[0]).drop("Unnamed: 0", axis = 1).set_index("Compound")
     
     return df_lit
 
@@ -93,16 +93,16 @@ def standardize_globalMedian(df_,collist, reference, index_columns):
 def get_subset_results(df_,druglist):
     subset= df_.loc[druglist]
     #count_total = subset["Count_None"]
-    count_others = subset[("No","Count")] - subset[("embryo","Count")] - subset[("heart","Count")] - subset[("Covid-19","Count")] 
+    count_others = subset[('total','Count')] - subset[('Development','Count')] - subset[("Cardiovascular","Count")] - subset[("Covid-19","Count")] 
     
-    count_dev = subset[("embryo","Count")] - subset[("heart-embryo","Intersection")]
+    count_dev = subset[('Development','Count')] - subset[(('Cardiovascular', 'PID'), ('Development', 'PID'))]
 
-    count_heart = subset[("heart","Count")] - subset[("heart-embryo","Intersection")]
+    count_heart = subset[("Cardiovascular","Count")] - subset[(('Cardiovascular', 'PID'), ('Development', 'PID'))]
     
     count_covid = subset[("Covid-19","Count")]
     
     subset_summary = pd.DataFrame({"Others":count_others, "Development": count_dev, "Cardiovascular": count_heart, "Covid": count_covid, 
-    "Cardiovas.-Dev.": subset[("heart-embryo","Intersection")]})
+    "Cardiovas.-Dev.": subset[(('Cardiovascular', 'PID'), ('Development', 'PID'))]})
     return subset_summary.where(subset_summary > 0,0).T
 
 def plot_pies(df_):
