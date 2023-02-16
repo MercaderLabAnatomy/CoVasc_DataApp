@@ -94,11 +94,11 @@ def get_subset_results(df_,druglist):
     druglist = [i.split("_")[0] for i in druglist]
     subset = df_.loc[druglist]
     #count_total = subset["Count_None"]
-    count_others = subset["('total','Count')"] - subset["('Development','Count')"] - subset["('Cardiovascular','Count')"] - subset["('Covid-19','Count')"] 
+    count_others = subset["('total', 'Count')"] - subset["('Development', 'Count')"] - subset["('Cardiovascular', 'Count')"] - subset["('Covid-19', 'Count')"] 
     
-    count_dev = subset["('Development','Count')"] - subset["(('Cardiovascular', 'PID'), ('Development', 'PID'))"]
+    count_dev = subset["('Development', 'Count')"] - subset["(('Cardiovascular', 'PID'), ('Development', 'PID'))"]
 
-    count_heart = subset["('Cardiovascular','Count')"] - subset["(('Cardiovascular', 'PID'), ('Development', 'PID'))"]
+    count_heart = subset["('Cardiovascular', 'Count')"] - subset["(('Cardiovascular', 'PID'), ('Development', 'PID'))"]
     
     count_covid = subset["('Covid-19','Count')"]
     
