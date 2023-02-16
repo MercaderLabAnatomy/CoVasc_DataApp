@@ -15,7 +15,7 @@ from glob import glob
 
 def getAcquiferData():
     # ACQ function to load data
-    source = "Data/2022-07-28_Morphology_Assay_Collected_Measurements.xlsx"
+    source = "Data/2023-01-20_Morphology_Assay_Collected_Measurements.xlsx"
     df = pd.read_excel(source)
     df = df.drop(["Label","image_name", "Well","Heart Beats (Count)","Frames (Count)","Avg_Frametime (ms)", "Sum_Frametime (ms)","Repeat","TRIVIAL_NAME","Count_ISV","Edema"],axis=1)
     df = df.set_index(["Drug","Experiment ID","Concentration (µM)"])
@@ -24,7 +24,7 @@ def getAcquiferData():
 
 
 def getDaniovisionData():
-    source = "Data/2022-08-08_Behavior_Assay_Collected_Measurements_median.xlsx"
+    source = "Data/2023-02-16_Behavior_Assay_Collected_Measurements_median.xlsx"
     df = pd.read_excel(source)
     df = df.drop(["Unnamed: 0","Replicate","Well"],axis=1)
     df = df.set_index(["Drug","Experiment ID","Concentration (µM)"])
@@ -33,8 +33,8 @@ def getDaniovisionData():
     return df, list_measurements
 
 def getActivityData():
-    source = "Data/CovidDrugScreen_Results_MeanActivity_Daniovision.csv"
-    df = pd.read_csv(source)
+    source = "Data/2023-02-16_Behavior_Assay_Collected_Measurements_lineplot.xlsx"
+    df = pd.read_excel(source)
     return df
     
 def getSurvivalData():
@@ -45,7 +45,7 @@ def getSurvivalData():
     return (df_acquifer,df_daniovision)
 
 def get_literature_results():
-    df_lit = pd.read_excel("Data/CovidDrugScreen_Results_Literature_intersection_2022-07-12.xlsx",header=[0,1]).dropna().drop("Unnamed: 0_level_0", axis = 1).set_index(("Origin","Tag"))
+    df_lit = pd.read_excel("Data/2023-01-20_LiteratureSearch_Results.xlsx",header=[0,1]).dropna().drop("Unnamed: 0_level_0", axis = 1).set_index(("Origin","Tag"))
     
     return df_lit
 
@@ -56,7 +56,7 @@ def get_scores():
     
     return df_
 
-def get_stats_scores(source="Data/2022-07-28_Morphology_Assay_stars.xlsx"):
+def get_stats_scores(source="Data/2023-01-20_Morphology_Assay_stars.xlsx"):
     df = pd.read_excel(source,index_col=[0,1])
     df.index = df.index.set_names( ['Drug','Concentration (µM)'])
     return df
@@ -332,18 +332,18 @@ if a_state:
         all_drugs = st.checkbox('Show all drugs')
         
         if not all_drugs:
-            df_effscore = get_stats_scores( source="Data/2022-07-28_Morphology_Assay_effectscore.xlsx").loc[x]
-            df_effscore2 = get_stats_scores(source="Data/2022-08-08_Behavior_Assay_effectscore.xlsx").loc[x]
+            df_effscore = get_stats_scores( source="Data/2023-01-20_Morphology_Assay_effectscore.xlsx").loc[x]
+            df_effscore2 = get_stats_scores(source="Data/2023-02-16_Behavior_Assay_effectscore.xlsx").loc[x]
             
-            df_pval = get_stats_scores( source="Data/2022-07-28_Morphology_Assay_pvalues.xlsx").loc[x]
-            df_pval2 = get_stats_scores( source="Data/2022-08-08_Behavior_Assay_pvalues.xlsx").loc[x]
+            df_pval = get_stats_scores( source="Data/2023-01-20_Morphology_Assay_pvalues.xlsx").loc[x]
+            df_pval2 = get_stats_scores( source="Data/2023-02-16_Behavior_Assay_pvalues.xlsx").loc[x]
         
         else:
-            df_effscore = get_stats_scores( source="Data/2022-07-28_Morphology_Assay_effectscore.xlsx")
-            df_effscore2 = get_stats_scores(source="Data/2022-08-08_Behavior_Assay_effectscore.xlsx")
+            df_effscore = get_stats_scores( source="Data/2023-01-20_Morphology_Assay_effectscore.xlsx")
+            df_effscore2 = get_stats_scores(source="Data/2023-02-16_Behavior_Assay_effectscore.xlsx")
             
-            df_pval = get_stats_scores( source="Data/2022-07-28_Morphology_Assay_pvalues.xlsx")
-            df_pval2 = get_stats_scores( source="Data/2022-08-08_Behavior_Assay_pvalues.xlsx")
+            df_pval = get_stats_scores( source="Data/2023-01-20_Morphology_Assay_pvalues.xlsx")
+            df_pval2 = get_stats_scores( source="Data/2023-02-16_Behavior_Assay_pvalues.xlsx")
         
         if mask_nonsignificant:
             df_effscore[df_pval >= 0.05] = 0
