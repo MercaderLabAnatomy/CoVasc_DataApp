@@ -100,7 +100,7 @@ def get_subset_results(df_,druglist):
 
     count_heart = subset["('Cardiovascular', 'Count')"] - subset["(('Cardiovascular', 'PID'), ('Development', 'PID'))"]
     
-    count_covid = subset["('Covid-19','Count')"]
+    count_covid = subset["('Covid-19', 'Count')"]
     
     subset_summary = pd.DataFrame({"Others":count_others, "Development": count_dev, "Cardiovascular": count_heart, "Covid": count_covid, 
     "Cardiovas.-Dev.": subset["(('Cardiovascular', 'PID'), ('Development', 'PID'))"]})
