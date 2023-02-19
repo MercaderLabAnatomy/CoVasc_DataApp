@@ -136,7 +136,7 @@ def plot_heatmap(df_, druglist = None, show_all = True, scale = True):
     
     if druglist and ~show_all:
         df_ = df_.loc[druglist]
-        df_["Drug__Concentration (µM)"] = df_.reset_index()["Drug"] + df_.reset_index()["Concentration (µM)"]
+        df_["Drug__Concentration (µM)"] = df_.reset_index()["Drug"] +"__"+ df_.reset_index()["Concentration (µM)"]
         
         
     if scale:
