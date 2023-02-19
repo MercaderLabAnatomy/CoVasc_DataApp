@@ -50,7 +50,7 @@ def get_literature_results():
     return df_lit
 
 def get_scores():
-    df_ = pd.read_excel("Data/CovidDrugScreen_Score_Threshold_Scaled.xlsx").rename(columns={"Unnamed: 0":"Drug"}).set_index("Drug")
+    df_ = pd.read_excel("Data/2023-02-19_MorphBehav_Merged_Effectscore.xlsx").set_index("Drug")
     #df_.columns = [i.replace("Â","") for i in df_.columns]
     #df_ = df_.sort_values("clusters")
     
