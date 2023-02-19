@@ -133,9 +133,10 @@ def plot_pies(df_):
     return fig
 
 def plot_heatmap(df_, druglist = None, show_all = True, scale = True):
+    df_["Drug__Concentration (µM)"] = df_["Drug"] +"__"+ df_["Concentration (µM)"].astype(str)
+    df_ = df_.set_index(["Drug","Concentration (µM)"])
     
-    if druglist and ~show_all:
-        df_["Drug__Concentration (µM)"] = df_.reset_index()["Drug"] +"__"+ df_.reset_index()["Concentration (µM)"].astype(str)
+    if druglist and ~show_all:    
         df_ = df_.loc[druglist]
         
     if scale:
@@ -159,7 +160,7 @@ def plot_heatmap(df_, druglist = None, show_all = True, scale = True):
     #for cl in list(df_["clusters"].unique()):
     #    fig.add_vline(np.max(np.where(df_["clusters"] == cl))+0.5)
     fig.update_xaxes( tickangle = -90)
-    fig.update_layout(width=1000,height=400)
+    fig.update_layout(width=1000,height=500)
     
     return fig
     
