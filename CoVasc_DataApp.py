@@ -135,15 +135,14 @@ def plot_pies(df_):
 def plot_heatmap(df_, druglist = None, show_all = True, scale = True):
     
     if druglist and ~show_all:
-        df_ = df_.loc[druglist]
         df_["Drug__Concentration (µM)"] = df_.reset_index()["Drug"] +"__"+ df_.reset_index()["Concentration (µM)"].astype(str)
-        
+        df_ = df_.loc[druglist]
         
     if scale:
         
         fig = go.Figure(data=go.Heatmap(
-                        z= df_[df_.columns[2:]].T,
-                        y= df_.columns[2:],
+                        z= df_[df_.columns[3:]].T,
+                        y= df_.columns[3:],
                         x= df_["Drug__Concentration (µM)"],
                         
                         zmid = 0,
@@ -151,8 +150,8 @@ def plot_heatmap(df_, druglist = None, show_all = True, scale = True):
         ))
     else:
         fig = go.Figure(data=go.Heatmap(
-                    z= df_[df_.columns[2:]].T,
-                    y= df_.columns[2:],
+                    z= df_[df_.columns[3:]].T,
+                    y= df_.columns[3:],
                     x= df_["Drug__Concentration (µM)"],
                     colorscale = 'PiYG'
         ))
