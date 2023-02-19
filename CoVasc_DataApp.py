@@ -34,7 +34,7 @@ def getDaniovisionData():
 
 def getActivityData():
     source = "Data/2023-02-16_Behavior_Assay_Collected_Measurements_lineplot.xlsx"
-    df = pd.read_excel(source)
+    df = pd.read_excel(source).fillna(method='ffill', axis=0)
     return df
     
 def getSurvivalData():
