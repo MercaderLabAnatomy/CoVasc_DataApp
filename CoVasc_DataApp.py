@@ -66,7 +66,7 @@ def survival_plot(inputdata,druglist):
     druglist=[i for i in druglist if i in list(inputdata.index)]
     
     output=inputdata.loc[druglist].reset_index()
-    output["Code"]=output["Concentration in µM"].astype(str) + " µM_Replicate " + output["Replicate"].astype(str)
+    output["Code"]=output["Concentration (µM)"].astype(str) + " µM_Replicate " + output["Replicate"].astype(str)
     data= output.pivot(columns=["Drug"],values="Survival Rate", index =["Code"]).reset_index().astype(str).set_index(["Code"])
     x_= data.columns
     y_= data.index
