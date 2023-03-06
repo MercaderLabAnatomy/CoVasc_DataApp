@@ -4,3 +4,4 @@ nbserverproxy
 nbconvert
 scikit-image
 plotly
+openpyxl
