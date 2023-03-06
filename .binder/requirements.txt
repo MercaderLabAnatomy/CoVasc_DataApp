@@ -1,7 +1,0 @@
-streamlit
-jupyter-server-proxy
-nbserverproxy
-nbconvert
-scikit-image
-plotly
-openpyxl
