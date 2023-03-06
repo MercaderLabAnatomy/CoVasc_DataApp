@@ -1,7 +1,11 @@
 name: CoVasc_App
+channels:
+  - conda
+  - conda-forge
 dependencies:
   - pip
   - python
+  - jupyter-server-proxy
   - pip:
     - numpy
     - pandas
@@ -11,7 +15,5 @@ dependencies:
     - streamlit
     - pydeck
     - plotly
-    - nbserverproxy
     - streamlit
-    - jupyter-server-proxy
 
