@@ -1,9 +1,9 @@
-﻿name: CoVasc_App
-
+name: CoVasc_App
+channels: 
+  - conda-forge
 dependencies:
   - pip
   - python
-  - plotly
   - pip:
       - numpy
       - pandas
@@ -12,3 +12,4 @@ dependencies:
       - openpyxl
       - streamlit
       - pydeck
+      - plotly
