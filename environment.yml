@@ -5,11 +5,11 @@ dependencies:
   - pip
   - python
   - pip:
-      - numpy
-      - pandas
-      - scikit-image
-      - pillow
-      - openpyxl
-      - streamlit
-      - pydeck
-      - plotly
+    - numpy
+    - pandas
+    - scikit-image
+    - pillow
+    - openpyxl
+    - streamlit
+    - pydeck
+    - plotly
